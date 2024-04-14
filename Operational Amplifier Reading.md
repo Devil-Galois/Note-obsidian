@@ -6,4 +6,4 @@
 4. 差分放大器：用于剥离DC成分，或抑制共模噪声。但输入端的输入阻抗不容易匹配。
 5. 复杂反馈网络：在反馈环路中加入低阻抗接地通路。标准的反向运放无法完成，因为其输入电阻取决于驱动电路，反馈电阻由增益指标规定。可以使用下面的T型网络实现：<br>
 ![T型网络插入反馈回路](https://github.com/Devil-Galois/ImageOfNoteBook/blob/master/scheme1.png)<br>
-计算公式：$-\frac{V_{out}}{V_{in}}=\frac{R_2+R_3+\frac{R_2R_3}{R_4}}{R_1}$<br>
+计算公式：$-\dfrac{V_{out}}{V_{in}}=\dfrac{R_2+R_3+\dfrac{R_2R_3}{R_4}}{R_1}$<br>
