@@ -1,3 +1,4 @@
+***
 # 理想运放相关
 ## 一些注意点
 1. 对**FET**运放，输入端电流在**1pA**以下，对双极高速运放有时在数十uA。
@@ -21,5 +22,24 @@
 另外还要注意输入级的反向击穿电压，在任何启动状态下避免输入端承担过多的反向偏压。<br>
 ## 四种单电源设计案例
 
-### 范例一：$V_{out}=mV_{in}+b$<br>
+### 范例一：$V_{out}=+mV_{in}+b$<br>
 ![范例一电路](https://github.com/Devil-Galois/ImageOfNoteBook/blob/master/Scheme2.png)<br>
+$C_1,C_2$去耦电容：0.01u,降低高频噪声，提高电路抑制噪声能力。
+当使用基准电压时，特别注意基准电压的稳压性和噪声成分，因为它们会被电路增益放大。<br>
+$V_{out}=V_{in}\dfrac{R_2}{R_1+R_2}\dfrac{R_F+R_G}{R_G}+V_{ref}\dfrac{R_1}{R_1+R_2}\dfrac{R_F+R_G}{R_G}$<br>
+一般选取VCC为基准电压$V_{ref}$
+$m=\dfrac{R_2}{R_1+R_2}\dfrac{R_F+R_G}{R_{G}}\qquad b=V_{ref}\dfrac{R_1}{R_1+R_2}\dfrac{R_F+R_G}{R_G}$
+电阻的绝对大小应考虑：**电源电流，频率响应，运放的驱动能力**。
+输入回路电阻值很大，输入失调电流影响大；更高的频率响应，必须降低阻值；阻值减小会增加电源电流；阻值太小，使其他电路或运放难以驱动。
+### 范例二：$V_{out}=+mV_{in}-b$<br>
+![范例二电路](https://github.com/Devil-Galois/ImageOfNoteBook/blob/master/Scheme3.png)<br>
+$R_3=R_{G}\qquad R_4=R_F$
+$V_{out}=V_{in}\dfrac{R_F+R_G+R_1||R_2}{R_G+R_1||R_2}-V_{ref}\dfrac{R_2}{R_1+R_2}\dfrac{R_F}{R_G+R_1||R_2}$<br>
+实际中假定$R_G>>R_1||R_2$ &#160 &#160 $R_1,R_2$阻值过小会使得5%误差特性变大。
+### 范例三：$V_{out}=-mV_{in}+b$<br>
+![范例三电路](https://github.com/Devil-Galois/ImageOfNoteBook/blob/master/Scheme4.png)<br>
+$V_{out}=-V_{in}\dfrac{R_F}{R_F+R_G}+V_{ref}\dfrac{R_1}{R_1+R_2}\dfrac{R_F+R_G}{R_G}$<br>
+当VCC关闭，$V_{in}$带来的负电压对反向输入端有危险，这种启动状态不安全，应该在反相输入端接入一个二极管到地，钳制电位大于$-V_D$（百mV级无害)。
+更保险的办法是把$R_G$分裂成两个电阻，在二者之间接入二极管，这样其中一个电阻可以作为限流电阻。
+而正常工作状态下，二极管开路，对电路无影响。
+### 范例四：$V_{out}=-mV_{in}-b$<br>
