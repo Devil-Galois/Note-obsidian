@@ -21,3 +21,5 @@
 另外还要注意输入级的反向击穿电压，在任何启动状态下避免输入端承担过多的反向偏压。<br>
 ## 四种单电源设计案例
 
+### 范例一：$V_{out}=mV_{in}+b$<br>
+![范例一电路](https://github.com/Devil-Galois/ImageOfNoteBook/blob/master/Scheme2.png)<br>
