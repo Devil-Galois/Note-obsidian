@@ -95,9 +95,34 @@ $E=V_{in}-\beta V_{out}=\dfrac{V_in}{1+A\beta}$
 ### 传递函数波特图绘制示例
 考虑一个带阻滤波器：<br>
 $G=\dfrac{(1+\tau s)(1+\tau s)}{2(1+\dfrac{\tau s}{0.44})(1+\dfrac{\tau s}{4.56})}$<br>
-各个零极点的曲线图：
+各个零极点的曲线图：<br>
 ![零极点简化图](https://github.com/Devil-Galois/ImageOfNoteBook/blob/master/Scheme8.png)<br>
-零极点组合图：
+零极点组合图：<br>
 ![零极点组合图](https://github.com/Devil-Galois/ImageOfNoteBook/blob/master/bodefigure1.png)<br>
-各个极点或零点处的相交连接形成相频特性。
+各个极点或零点处的相角连接形成相频特性。
 ### 波特图应用于稳定性分析
+- 稳定性由环路增益所决定，当$A\beta=-1=|1|\angle -180^{\circ}$时，出现不稳定或者振荡，如果增益幅度超过1，一般会因非线性减小到1，所以振荡出现在增益超过1的情况。
+#### 举例分析
+考虑环路增益       $A\beta=\dfrac{K}{(1+\tau_{1}s)(1+\tau_{2}s)}$，  $K$是DC增益
+对应波特图：<br>
+![示例波特图](https://github.com/Devil-Galois/ImageOfNoteBook/blob/master/bodefigure2.png)<br>
+两个转折点：$\omega=\frac{1}{\tau_1}\qquad\omega=\frac{1}{\tau_2}$
+转折点处积累$-45^{\circ}$的相移和-20dB/十倍频的增益下降。
+
+曲线穿过0dB时的斜率指出了电路的相移和产生振荡的可能性。
+由此可知：
+**一个单斜率曲线只能积累起$90^{\circ}$的相移，所以当传递函数以单斜率的速率穿越0dB时是不会引起振荡的**。
+
+相位裕度$\phi_M$和增益裕度$G_M$用于描述稳定性。
+相位裕度是0dB时实际相移和$180^{\circ}$之间的差值；增益裕度是相移$180^{\circ}$时，实际增益和0dB之间的差值。
+相位裕度过小->很强的过冲和振铃。
+
+- 如果把环路增益增加到$K+C$，就使得幅度曲线上移，相位裕度就会下降，进而可能引起振荡。
+
+- 电路极点靠的很近，会引起相移积累更快，更易振荡。
+- 稳定的振荡器在穿越$180^{\circ}$相移时要有一个突变的过程。
+- 增加闭环增益会使得电路更加稳定（$\beta$减小，$A\beta$减小）。
+## 二次方程的振铃和过冲
+
+***
+# 非理想运放
