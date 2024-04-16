@@ -96,4 +96,8 @@ $E=V_{in}-\beta V_{out}=\dfrac{V_in}{1+A\beta}$
 考虑一个带阻滤波器：<br>
 $G=\dfrac{(1+\tau s)(1+\tau s)}{2(1+\dfrac{\tau s}{0.44})(1+\dfrac{\tau s}{4.56})}$<br>
 各个零极点的曲线图：
-
+![零极点简化图](https://github.com/Devil-Galois/ImageOfNoteBook/blob/master/Scheme8.png)<br>
+零极点组合图：
+![零极点组合图](https://github.com/Devil-Galois/ImageOfNoteBook/blob/master/bodefigure1.png)<br>
+各个极点或零点处的相交连接形成相频特性。
+### 波特图应用于稳定性分析
