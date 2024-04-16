@@ -123,6 +123,10 @@ $G=\dfrac{(1+\tau s)(1+\tau s)}{2(1+\dfrac{\tau s}{0.44})(1+\dfrac{\tau s}{4.56}
 - 稳定的振荡器在穿越$180^{\circ}$相移时要有一个突变的过程。
 - 增加闭环增益会使得电路更加稳定（$\beta$减小，$A\beta$减小）。
 ## 二次方程的振铃和过冲
-
+$1+A\beta=1+\dfrac{K}{(1+\tau_{1}s)(1+\tau_{2}s)}=0\rightarrow s^2+s\dfrac{\tau_1+\tau_2}{\tau_1\tau_2}+\dfrac{1+K}{\tau_1\tau_2}=0$
+$s^{2}+2\xi\omega_Ns+\omega_N^2=0\qquad\omega_N=\sqrt{\dfrac{1+K}{\tau_1\tau_2}}\qquad\xi=\dfrac{\tau_1+\tau_2}{2\omega_N\tau_1\tau_2}$
+$\phi_M-M=\arctan(2\xi)\qquad$两个极点必须间隔足够远
+两个参数分别是固有频率和阻尼系数。
 ***
 # 非理想运放
+## 
