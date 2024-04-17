@@ -223,5 +223,28 @@ $A\beta=\dfrac{R_G}{R_G+R_F}\dfrac{R_FCs+1}{R_F||R_GCs+1}\dfrac{K}{(s\tau_1+1)(s
 - 超前滞后补偿既可以稳定也可以获得好的闭环增益
 ***
 # 电流反馈运放
+- CFA不存在GBW的限制
+- 摆速很高
+- 高频场合>100M
+- 应用于动态范围要求不严的DC耦合视频
+- 更快的上升时间和更低的交调失真（不同频率成分互相调谐）
+## CFA模型
+同相输入端与内部输出缓冲器相连，具有很大的输入阻抗；反相端输入电阻等于缓冲器输出阻抗，一般较小 **(<50)**。
+输出缓冲器增益接近于1，提供很低的输出阻抗，基本可以忽略。只有在驱动重负载或者容性负载才会考虑。输入缓冲器的输出阻抗不可忽略，影响高频性能。
+跨阻在M欧数量级。
+示意图:<br>
+![CFA](https://github.com/Devil-Galois/Image-NoteBook/blob/master/Scheme13.png)<br>
+## 环路增益
+运放同相端接地，反相端构成标准反馈回路。
+稳定性计算电路：<br>
+![等效图](https://github.com/Devil-Galois/Image-NoteBook/blob/master/Scheme14.png)<br>
+$Z_B$是输入缓冲级的输出电阻。这是断开输出点与反馈环路后在$Z_F$上加$V_t$的等效图，我们要计算$V_{out}$。
+最终$A\beta=\dfrac{Z}{Z_F(1+\frac{Z_B}{Z_F||Z_G})}$
+### 同相CFA
+闭环增益方程：
+$\dfrac{V_{out}}{V_{in}}=\dfrac{A\beta(1+\frac{R_F}{R_G})}{1+A\beta}$
+$Z_B\rightarrow 0$
+
+
 
 
