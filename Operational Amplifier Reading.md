@@ -131,6 +131,8 @@ $s^{2}+2\xi\omega_Ns+\omega_N^2=0\qquad\omega_N=\sqrt{\dfrac{1+K}{\tau_1\tau_2}}
 下面求过冲：
 求其单位阶跃响应为 $h(t)=1-\dfrac{e^{-xi\omega_{N}t}}{\sqrt{1-\xi^2}}\sin(\omega_N\sqrt{1-\xi^2}t+\arctan\dfrac{\sqrt{1-\xi^2}}{\xi})$
 $h(t)=0\rightarrow t_p=\dfrac{\pi}{\sqrt{1-\xi^{2}\omega_{N}}}\rightarrow\text{过冲为}$<mark style="background: #BBFABBA6;">$OS=100\%\times\exp(\dfrac{-\xi\pi}{\sqrt{1-\xi^2}})$</mark>
+从上式还可以知道相位裕度和百分比过冲的关系。
+
 
 ***
 # 非理想运放方程
@@ -153,6 +155,37 @@ $\dfrac{V_{out}}{V_+-V_-}=\dfrac{\frac{aZ_F}{Z_F+Z_G}}{1+\frac{aZ_G}{Z_F+Z_G}}\l
 # 电压反馈运放的补偿
 ## 内部补偿
 运放是一个多极点系统，在内部补偿之后，运放在很大的频率范围内看起来是单极点系统，但补偿大大降低闭环带宽。
-补偿的一种：使用密勒效应，电容容值较小。
-![弥勒电容内部补偿](https://github.com/Devil-Galois/Image-NoteBook/blob/master/Scheme10.png)
+补偿的一种：使用密勒效应，电容容值较小。<br>
+![弥勒电容内部补偿](https://github.com/Devil-Galois/Image-NoteBook/blob/master/Scheme10.png)<br>
+密勒效应把电容扩大了大约等于这一级增益的那么多倍。
+## 外部补偿
+- 增加电路稳定性
+- 降低噪声
+- 使幅频响应平坦
+- 获取更大可能的带宽
+### 主极点补偿
+以电容作为输出负载的电路叫做主极点补偿。如果输出电阻和电容的极点与零频靠得很近，这个极点就处于支配地位。
+容易计算同相放大电路的环路增益：
+$A\beta=\dfrac{aZ_G}{Z_G+Z_F}\dfrac{1}{Z_OC_Ls+1}$
+带入运放二阶模型：$a=\dfrac{K}{(s+\tau_1)(s+\tau_2)}$
+$A\beta=\dfrac{K}{(s+\tau_1)(s+\tau_2)}\dfrac{Z_G}{Z_G+Z_F}\dfrac{1}{Z_OC_Ls+1}$
+假定$\frac{1}{\tau_1}<\frac{1}{\tau_2}$ ,由$Z_O$和$C_L$引起的极点向低频区移动，接近$\frac{1}{\tau_1}$就会引起相移增加，从而使得相位裕度下降。
+*实际电路中容性负载很常见，尤其是电缆*
+把一个主极点$\omega_D$放置在合适的位置使得增益提前下降，在$\frac{1}{\tau_1}$时，穿越0dB点，这时仅产生$45^{\circ}$的相移。
+补偿前后的环路增益波特图：<br>
+![主极点补偿曲线](https://github.com/Devil-Galois/Image-NoteBook/blob/master/bodefigure3.png)<br>
+### 增益补偿
+可以增加改变闭环增益使电路变得稳定。
+*这种补偿不适应于CFA，因为CFA的环路增益与理想闭环增益之间不存在数学关系*
+闭环增益从1改成9的波特图变化：提前过0dB点，相移减小。<br>
+![增益补偿](https://github.com/Devil-Galois/Image-NoteBook/blob/master/bodefigure4.png)<br>
+增益补偿适用于反相和同相电路，因为环路增益方程中包含了闭环增益，闭环增益增加会降低带宽。
+制造商会给出最低稳定增益。
+### 超前补偿
+- 有时候运放的封装和连线引起分布电容迫使超前补偿。
+- 有时候我们自己设置超前补偿。
+超前补偿电路：<br>
+
+
+
 
