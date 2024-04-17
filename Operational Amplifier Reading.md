@@ -125,8 +125,34 @@ $G=\dfrac{(1+\tau s)(1+\tau s)}{2(1+\dfrac{\tau s}{0.44})(1+\dfrac{\tau s}{4.56}
 ## 二次方程的振铃和过冲
 $1+A\beta=1+\dfrac{K}{(1+\tau_{1}s)(1+\tau_{2}s)}=0\rightarrow s^2+s\dfrac{\tau_1+\tau_2}{\tau_1\tau_2}+\dfrac{1+K}{\tau_1\tau_2}=0$
 $s^{2}+2\xi\omega_Ns+\omega_N^2=0\qquad\omega_N=\sqrt{\dfrac{1+K}{\tau_1\tau_2}}\qquad\xi=\dfrac{\tau_1+\tau_2}{2\omega_N\tau_1\tau_2}$
-$\phi_M-M=\arctan(2\xi)\qquad$两个极点必须间隔足够远
+<mark style="background: #BBFABBA6;">$\phi_M=\arctan\dfrac{2\xi}{\sqrt{\sqrt{4\xi^4+1}-2\xi^2}}</mark>\qquad$两个极点必须间隔足够远
 两个参数分别是固有频率和阻尼系数。
+
+下面求过冲：
+求其单位阶跃响应为 $h(t)=1-\dfrac{e^{-xi\omega_{N}t}}{\sqrt{1-\xi^2}}\sin(\omega_N\sqrt{1-\xi^2}t+\arctan\dfrac{\sqrt{1-\xi^2}}{\xi})$
+$h(t)=0\rightarrow t_p=\dfrac{\pi}{\sqrt{1-\xi^{2}\omega_{N}}}\rightarrow\text{过冲为}$<mark style="background: #BBFABBA6;">$OS=100\%\times\exp(\dfrac{-\xi\pi}{\sqrt{1-\xi^2}})$</mark>
+
 ***
-# 非理想运放
-## 
+# 非理想运放方程
+## AC误差
+- CMRR 随工作频率升高而下降
+- 输出阻抗
+- 电源抑制比
+- 峰到峰输出电压
+- 差分增益
+- 相位裕度
+## 三种典型电路--电路的开环增益、运放开环增益、闭环增益
+### 反向运放
+设运放开环增益为a，电路的开环增益为A，则
+$\dfrac{V_{out}}{V_{in}}=\dfrac{\frac{-aZ_F}{Z_G+Z_F}}{1+\frac{aZ_G}{Z_G+Z_F}}\longrightarrow A=\dfrac{-aZ_F}{Z_G+Z_F}$
+### 同相运放
+$\dfrac{V_{out}}{V_{in}}=\dfrac{a}{1+a\frac{Z_G}{Z_G+Z_F}}\longrightarrow A=a$
+### 差分运放
+$\dfrac{V_{out}}{V_+-V_-}=\dfrac{\frac{aZ_F}{Z_F+Z_G}}{1+\frac{aZ_G}{Z_F+Z_G}}\longrightarrow A\beta=\dfrac{aZ_G}{Z_G+Z_F}$
+***
+# 电压反馈运放的补偿
+## 内部补偿
+运放是一个多极点系统，在内部补偿之后，运放在很大的频率范围内看起来是单极点系统，但补偿大大降低闭环带宽。
+补偿的一种：使用密勒效应，电容容值较小。
+![弥勒电容内部补偿](https://github.com/Devil-Galois/Image-NoteBook/blob/master/Scheme10.png)
+
