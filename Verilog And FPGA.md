@@ -315,3 +315,109 @@ endcase
 - case分支项的值必须不同
 - 执行某项后就直接跳出case
 - `case,casez,casex`真值
+
+| case |  0  |  1  |  x  |  z  |
+|:----:|:---:|:---:|:---:|:---:|
+|  0   |  1  |  0  |  0  |  0  |
+|  1   |  0  |  1  |  0  |  0  |
+|  x   |  0  |  0  |  1  |  0  |
+|  z   |  0  |  0  |  0  |  1  |
+
+| casez |  0  |  1  |  x  |  z  |
+|:-----:|:---:|:---:|:---:|:---:|
+|   0   |  1  |  0  |  0  |  1  |
+|   1   |  0  |  1  |  0  |  1  |
+|   x   |  0  |  0  |  1  |  1  |
+|   z   |  1  |  1  |  1  |  1  |
+
+| casex |  0  |  1  |  x  |  z  |
+|:-----:|:---:|:---:|:---:|:---:|
+|   0   |  1  |  0  |  1  |  1  |
+|   1   |  0  |  1  |  1  |  1  |
+|   x   |  1  |  1  |  1  |  1  |
+|   z   |  1  |  1  |  1  |  1  |
+
+- `casez`忽略高阻位的比较，`casex`忽略高阻和不定位的比较
+## `if_else,case`注意点
+```
+always @(al or d)
+	begin
+		if(al) q=d;
+	end
+```
+没有包含`al=0`的情况，`q`保持原值，生成一个锁存器
+```
+always @(al or d)
+	 begin
+		 if(al) q=d;
+		 else   q=0;
+	 end
+```
+这种不会综合出锁存器
+
+```
+always @(sel[1:0],a,b)
+	case (sel[1:0])
+		2'b00: q < =a;
+		2'b11: q < =b;
+	endcase
+```
+不包含`default`且未包含所有情况，会综合出锁存器
+```
+always @(sel[1:0],a,b)
+	case (sel[1:0])
+		2'b00: q < =a;
+		2'b11: q < =b;
+		default:q < ='b0;
+	endcase
+```
+这种不会综合出锁存器
+**在组合逻辑中把输出赋值给自己也会产生latch**
+
+## `while`
+## `for`
+```
+for(inite variables,conditions,step)
+	begin
+	...
+	end
+```
+## `repeat`
+执行固定次数，次数可以是常量、变量、信号；如果是变量，信号，则执行次数是执行开始时的值。
+```
+integer count;
+
+initial 
+begin
+	count=0;
+	repeat(128)
+	begin
+		$display("Count=%d",count);
+		count=count+1;
+	end
+end
+
+module data_buffer(data_start,data,clock);
+parameter cycles=8;
+input data_start;
+input [15:0] data;
+input clock;
+
+reg [15:0] buffer [0:7];
+integer i;
+
+always @ (posedge clock)
+begin
+	if(data_start)
+		begin
+			i=0;
+			repeat(cycles)
+			begin
+				@(posedge clock) buffer[i]=data;
+				i=i+1;
+			end 
+		end
+	end
+endmodule
+```
+## `forever`
