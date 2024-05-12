@@ -421,3 +421,283 @@ begin
 endmodule
 ```
 ## `forever`
+不断执行直到遇到`$finish`,可以使用`disable`语句进行终止
+```
+//例1
+//使用forever实现时钟发生
+reg clock;
+
+initial
+begin
+	clock=1'b0;
+	forever #10 clock=~clock;//时钟周期为20个时间单位
+end
+//例2
+reg clock;
+reg x,y;
+
+initial forever
+		@(posedge clock) x=y;//在时钟上升沿处使两个寄存器值一致
+```
+## 块语句的特点
+- 嵌套块
+顺序块和并行块混合使用
+```
+initial
+begin
+	x=1'b0;
+	fork
+		#5 y=1'b1;
+		#10 z={x,y};
+	join
+	#20 w={y,x};
+end
+```
+- 命名块
+1. 命名块中可以声明局部变量
+2. 命名块中的局部变量可以通过层次名进行访问
+3. 命名块可以被禁用
+```
+module top
+
+initial 
+begin :block1 //命名为block1
+integer i;  //i 可以通过top.block1.i进行访问
+...
+end
+
+initial
+fork :block2
+integer i;  //i 可以通过top.block2.i进行访问
+...
+join
+...
+```
+
+```
+reg [15:0] flag;
+integer i;
+initial
+	flag=16'b 0010_0000_0000_0000;
+	i=0;
+	begin :block1
+	while(i<16)
+		begin
+			if(flag[i])
+			begin
+				$diaplay("%d",i);
+				disable block1;
+			end
+			i=i+1;
+		end
+	end
+end
+```
+## 生成块
+```
+generate
+...
+endgenerate
+```
+生成实例：
+- 模块
+- 自定义原语
+- 门级原语
+- 连续赋值语句
+- initial，always块
+
+可以包含的数据类型：
+- `net,reg`
+- `integer,real,time,realtime`
+- `event`
+1. 循环生成语句
+```
+module bitwise_xor(out,i0,i1);
+parameter N=32;
+output [N-1]out;
+input  [N-1]i0,i1;
+
+genvar j;  //用于生成块的循环计算
+
+generate for(j=0;j<N;j=j+1)
+	begin: xor_loop   //for内部的模块名
+	xor g1(out[j],i0[j],i1[j]);
+	end
+endgenerate
+
+
+//另一种编写形式
+//reg [N-1,0]out;
+//generate for(j=0;j<N;j=j+1)
+//         begin:bit
+//         always @(i0[j],i1[j])
+//               out[j]=i0[j]^i1[j];
+//         end
+//endgenerate
+
+endmodule
+```
+- 生成变量的值只能由循环生成语句改变
+- 生成变量只能用于生成块中
+- 上例中`xor_loop`是循环生成语句的名字，使用`xor_loop[0].g1,xor_loop[1].g1,...,xor_loop[31].g1`得到异或门的相对层次名
+2. 条件生成语句
+```
+//如果数据位宽大于8就调用树形乘法器，否则调用超前进位乘法器
+module multiplifier(product,a0,a1);
+//参数声明（可修改）
+parameter a0_width=8;
+parameter a1_width=8;
+
+//本地参数不能用defparam修改,也不能通过传递参数进行修改，如
+//#(param1,param2,...)
+localparam product_width=a0_width+a1_width;
+
+output [product_width-1:0]product;
+input  [a0_width-1:0]a0;
+input  [a1_width-1:0]a1;
+
+generate 
+if(a0_width< =8||a1_width< =8)
+	cla_multiplier #(a0_width,a1_width) m0(product,a0,a1);
+else tree_multiplier #(a0_width,a1_width) m0(product,a0,a1);
+endgenerate
+
+endmodule
+```
+3. `case`生成语句
+```
+//实现N位加法器
+module adder(co,sum,a0,a1,ci);
+parameter N=4;
+
+output co;
+output [N-1:0]sum;
+input  [N-1:0]a0,a1;
+input  ci;
+
+generate
+	case(N)
+	1: adder_1bit adder1(co,sum,a0,a1,ci);
+	2: adder_2bit adder2(co,sum,a0,a1,ci);
+	default: adder_cla #(N) adder3(co,sum,a0,a1,ci);
+	endcase
+endgenerate
+endmodule
+```
+***
+# Task and Function
+## Differences
+
+| Function                                   | Task                                  |
+| ------------------------------------------ | -------------------------------------- |
+| 函数可以调用另一个函数，不可以调用任务     | 任务既可以调用另一个任务也可以调用函数 |
+| 函数在仿真0时刻开始执行                    | 任务可以在非零时刻执行                 |
+| 函数内部不可以包含时序控制语句             | 任务可以包含                           |
+| 函数至少一个输入变量                       | 任务可以有或者无输入、输出、双向变量   |
+| 函数只能返回一个值，不可以有输出、双向变量 | 任务不返回值                           |
+- 任务和函数的作用范围仅限于定义所在的模块
+- 任务用于替换Verilog代码
+- 函数用于替换组合逻辑
+- 可以声明`reg,time,integer,event,real`，不可以声明`wire,net`
+- 不可以包含`always,initial`块
+## Task
+```
+task
+...
+endtask
+```
+以下情况下必须用task而不能用function
+- 子程序含延迟、时序、事件控制
+- 没有输出或者多输出
+- 没有输入
+### 任务声明和调用
+```
+//声明
+task [automatic] task_identifier;
+{task_item_declaration}
+statement
+endtask
+
+//或者
+task [automatic] task_identifier (task_port_list);
+{block_item_declaration}
+statement
+endtask
+
+//item声明
+tf_input_declaration;
+tf_output_declaration;
+tf_inout_declaration;
+
+task_port_type:reg real time realtime integer
+```
+模块的`input,output,inout`用于和外部连接，任务的则只是传入变量
+```
+module operation;
+...
+parameter delay=10;
+reg [15:0] A,B;
+reg [15:0] AB_AND,AB_OR,AB_XOR;
+
+always @(A,B)
+begin
+	bitwise_oper(AB_AND,AB_OR,AB_XOR,A,B);
+end
+
+
+task bitwise_oper;
+input [15:0]a,b;
+output [15:0] ab_and,ab_or,ab_xor;
+begin
+	#delay ab_and=a&b;
+	ab_or=a|b;
+	ab_xor=a^b;
+end
+endtask
+...
+endmodule
+```
+### 自动可重入任务
+防止一个任务在两处被同时调用时，二者对一块地址空间进行操作
+```
+module top;
+reg [15:0] cd_xor,ef_xor;
+reg [15:0] c,d,e,f;
+
+task automatic bitwise_xor;
+output [15:0] ab_xor;
+input  [15:0] a,b;
+begin 
+	#delay ab_xor=a^b;
+end
+endtask
+
+always @(posedge clk)
+	bitwise_xor(ef_xor,e,f);
+always @(posedge clk2)//clk2是clk频率的二倍
+//且同步
+	bitwise_xor(cd_xor,c,d);
+endmodule
+```
+## Function
+适用情况：
+- 子程序不含延迟、时序或者控制结构
+- 子程序只有一个返回值
+- 至少一个输入变量
+- 没有输出、双向变量
+- 没有非阻塞赋值语句
+### 函数声明和调用
+```
+function [automatic] [signed] [rangeortype]
+function_indentifier;
+function_item_declaration
+function_statement;
+endfunction
+
+rangeortype:range|integer,real,realtime,time
+```
+
+```
+//偶校验位的计算
+
+```
